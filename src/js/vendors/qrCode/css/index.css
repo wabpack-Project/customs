@@ -1,0 +1,10 @@
+/** 重置样式 */
+@import url(../../../../css/customs/module/reset.css);
+
+/** 模块样式 */
+@import url(../../../../css/customs/font/iconfont.css);
+@import url(../../../../css/customs/module/media.css);
+@import url(../../../../css/customs/module/common.css);
+@import url(../../../../css/customs/module/popUp.css);
+
+@import url(qrCode.css);

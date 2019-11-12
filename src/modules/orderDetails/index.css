@@ -1,0 +1,35 @@
+/***
+ * 基础样式
+**/
+/** 重置样式 */
+@import url(../../css/customs/module/reset.css);
+/** 字体样式 */
+@import url(../../css/customs/font/iconfont.css);
+/** 模块样式 */
+@import url(../../css/customs/module/media.css);
+/** 共用样式 */
+@import url(../../css/customs/module/common.css);
+/** 布局 */
+@import url(../../css/customs/module/layout.css);
+
+/***
+ * 模块样式
+**/
+@import url(../../css/customs/module/payment_info.css);
+@import url(../../css/customs/module/base_info.css);
+@import url(../../css/customs/module/popUp.css);
+@import url(../../css/customs/module/foot.css);
+
+@import url(../../css/customs/module/qrCode.css);
+
+/***
+ * 组件样式
+**/
+@import url(../../js/vendors/drawer/drawer_m.css);
+@import url(../../js/vendors/header/css/head.css);
+
+/** 业务样式 */
+@import url(../../css/customs/order_details.css);
+
+
+

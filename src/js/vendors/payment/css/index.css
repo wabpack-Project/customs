@@ -1,0 +1,13 @@
+/** 重置样式 */
+@import url(../../../../css/customs/module/reset.css);
+
+/** 公共样式 */
+@import url(../../../../css/customs/font/iconfont.css);
+@import url(../../../../css/customs/module/media.css);
+@import url(../../../../css/customs/module/common.css);
+
+/** 组件样式 */
+@import url(../../drawer/drawer_m.css);
+
+/** 业务样式 */
+@import url(payment.css);

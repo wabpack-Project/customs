@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no">
+  <title>订单详情</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  
+  <link href="../../modules/orderDetails/index.css" rel="stylesheet" >
+  
+</head>
+<body>
+
+<!-- 头部 -->
+<!--<header class="head">-->
+
+<!--</header>-->
+<!-- 中间 -->
+<main>
+  <%
+  var orderInfo = data;
+  %>
+  <!-- 项目信息 -->
+  <div class="payment_info card mg_btm">
+    <div class="pf_name">项目信息</div>
+    <!---->
+    <ul class="pf_list">
+      <%
+      var i = 0, orderDetail = data.details, len = orderDetail.length;
+      for(; i<len; i++){
+      var detailInfo = orderDetail[i];
+      %>
+      <li>
+        <div class="pf_item clearfix">
+          <div class="pf_item_img fl"><img src="<%=detailInfo.img_url||''%>"></div>
+          <div class="pf_item_tit row_2 fl"><%=detailInfo.order_name||''%></div>
+          <div class="pf_item_other fr">
+            <span><em>￥</em><%=detailInfo.price||''%></span>
+            <i>x<%=detailInfo.num||''%></i>
+          </div>
+        </div>
+      </li>
+      <%
+      }
+      %>
+    </ul>
+  <!---->
+    <div class="pf_price">
+      <div class="pf_price_item clearfix">小计：<span class="fr"><em>￥</em><%=orderInfo.amount||''%></span></div>
+      <div class="pf_price_item clearfix">优惠：<span class="fr"><em>￥</em><%=orderInfo.discount||''%></span></div>
+      <div class="pf_price_item clearfix">运费：<span class="fr"><em>￥</em><%=orderInfo.delivery_fee||''%></span></div>
+    </div>
+  <!---->
+    <div class="pf_total">
+      <i>共<%=orderInfo.pay_num||''%>个项目</i>  实付款：
+      <span><em>￥</em><%=orderInfo.total_fee||''%></span>
+    </div>
+  </div>
+  <!-- 详细信息 -->
+  <div class="base_info card">
+    <div class="bf_name">详细信息</div>
+    <div class="bf_con">
+      <div class="bf_item">订单编号：<span><%=orderInfo.orderno||''%></span></div>
+      <div class="bf_item">下单时间：<span><%=orderInfo.insertdate||''%></span></div>
+      <div class="bf_item">订单状态：<span><%=orderInfo.status||''%></span></div>
+      <div class="bf_item">就诊医生：<span><%=orderInfo.doctor_name||''%></span></div>
+      <div class="bf_item">就诊医院：<span><%=orderInfo.hospital_name||''%></span></div>
+    </div>
+  </div>
+  <!-- end -->
+</main>
+<!-- 底部 -->
+<footer>
+  <div class="foot_opt skin3">
+    <a href="javascript:;" class="prepare" >代付</a>
+    <a href="javascript:;" class="wxpay" >微信收款</a>
+    <a href="javascript:;" class="alipay" >支付宝收款</a>
+    <a href="javascript:;" class="remind_member" >提醒会员</a>
+  </div>
+</footer>
+<!-- end -->
+
+</body>
+</html>

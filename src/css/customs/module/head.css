@@ -1,0 +1,20 @@
+/* header */
+.wui_bar { position:fixed;z-index:10;right:0;left:0;height:2.5rem; padding-right:.5rem;padding-left:.5rem;border-bottom:0;background-color:#3cade7;-webkit-box-shadow:0 0 1px rgba(0,0,0,.85);box-shadow:0 0 1px rgba(0,0,0,.85);-webkit-backface-visibility:hidden;backface-visibility:hidden; }
+.wui_bar a { display:inline-block; }
+.wui_title { font-size:0.8rem;font-weight:500;line-height:2.5rem;position:absolute; left:2rem; right:2rem; padding:0;text-align:center;white-space:nowrap;color:#fff; }
+.bar_nav { top:0;-webkit-box-shadow:0 1px 6px #ccc;box-shadow:0 1px 6px #ccc; }
+.bar_nav a { text-align:center; margin:.5rem 0; color:#fff; width:1.3rem; height:1.3rem; }
+.bar_nav a.member_info { font-size:.6rem; border:2px #fff solid; line-height:1.2rem; }
+.bar_nav a.signin { font-size:.7rem; border:2px #3cade7 solid; line-height:1.2rem; width:1.7rem; margin-right:-0.2rem; }
+.bar_nav a.shopcar_del { font-size:.7rem; border:2px #3cade7 solid; line-height:1.2rem; width:1.7rem; margin-right:-0.2rem; }
+.bar_nav a.word4 { font-size:.6rem; border:2px #3cade7 solid; line-height:1.2rem; width:2.8rem; margin-right:-0.2rem; }
+.bar_nav a.icon-back { font-size:1rem; border:2px #3cade7 solid; margin:.58rem 0 .42rem; }
+.bar_nav a.icon-search { font-size:1rem; border:2px #3cade7 solid; margin:.65rem 0 .35rem; }
+.bar_nav a.icon-shopcar8 { font-size:1rem; border:2px #3cade7 solid; margin:.65rem 0 .35rem; }
+.bar_left { float:left; }
+.bar_right { float:right; }
+.bar_nav a.bar_right { display: none; }
+.bar_nav a.member_info, .bar_nav a.signin { display: block; }
+
+/* 圆角 */
+.radius50_per { -moz-border-radius: 50%; -khtml-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; }
