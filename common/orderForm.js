@@ -134,7 +134,7 @@ commonConfig.min = {
 		}
 	},
 	build : {
-		//压缩选项
+		// 压缩选项
 		uglifyOptions: {
 			compress: {
 				warnings: false,

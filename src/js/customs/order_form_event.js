@@ -203,6 +203,56 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 		};
 
 	/**
+	 * 更新页面警告信息
+	 */
+	var updateNotice = function (el) {
+		// 警告字符拼接
+		console.log(global.notice);
+		console.log(el);
+		// 获取警告信息
+		var m, curDes, active = global.notice.active,
+			inactive = global.notice.inactive,
+			countdown_minute = parseInt(global.notice.countdown_minute);
+		// 拆分提示警告信息
+		var num_1 = active.indexOf("于"),
+			des_1 = active.substring(0, num_1+1),
+			num_2 = active.indexOf("分"),
+			des_2 = active.substring(num_2);
+		console.log(num_1, des_1);
+		console.log(num_2, des_2);
+		console.log(countdown_minute);
+		// 判断本地请求配置时间
+		if (ajax.isLocal()) {
+			m = 1;
+			countdown_minute = 5;
+		} else {
+			m = 60;
+		}
+		// 绑定倒计时事件
+		var t = setInterval(function () {
+			// debugger
+			// 更新倒计时
+			countdown_minute --;
+			// 判断倒计时
+			if (countdown_minute == 0) {
+				// 更新页面警告
+				$(".p_warning").find("em").text(inactive);
+				// 停止倒计时
+				clearInterval(t);
+				// 解除绑定
+				$(el).off();
+				// 更新按钮状态
+				$(el).addClass("disabled");
+			} else {
+				// 拼接警告描述
+				curDes = des_1 + countdown_minute + des_2;
+				// 更新页面警告
+				$(".p_warning").find("em").text(curDes);
+			}
+		}, m * 1000);
+	};
+
+	/**
 	 * DOM事件绑定
 	 */
 	var bindEvent = function (id, url) {
@@ -225,7 +275,11 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 
 		// 绑定确认支付事件
 		$pay_sure.click(sureClickHand);
-		// return;
+
+		// 更新页面警告
+		updateNotice($pay_sure);
+
+		return;
 		// 绑定充值点击事件
 		$ig_recharge.click(function () {
 			// 跳转充值地址
@@ -260,9 +314,8 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 	// 确认支付点击事件
 	var sureClickHand = function () {
 		// 请求确认支付信息接口
-		// sureOrderInfo();
-		// 载入选择支付方式
-		loadPaymentList(null, bindPaymentEvent);
+		sureOrderInfo();
+
 	};
 
 	// 载入支付方式列表模板
@@ -271,6 +324,7 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 		draw({
 			innerText: tpl.paymentList,
 			data: d,
+			maskClose: true,
 			onShow: function (el) {
 				// console.log("弹窗显示后触发事件");
 				// 触发回调方法
@@ -318,7 +372,11 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 			// 移除支付方式列表
 			$(el).remove();
 			// 请求确认支付信息接口
-			sureOrderInfo(pay_type);
+			// sureOrderInfo(pay_type);
+
+			// 提交form支付
+			$("#paying_form").submit();
+
 			// 打印取货方式
 			console.log(global.way);
 			// 打印 FORM 信息
@@ -557,14 +615,14 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 		var $region = $("#region"),
 			$uname = $("#uname"),
 			$detail = $("#detail"),
+			$mobile = $("#mobile"),
 			$confirm = $(el).find(".confirm");
 		// 绑定选择地区事件
 		$region.click(getProvince);
 		// 绑定收货人输入事件
-		$uname.bind('input propertychange', function () {
-			// 验证非法输入
-			checkIllegalInput(this);
-		});
+		checkCNbind($uname, checkIllegalInput);
+		// 绑定收货人手机号输入事件 // 验证只能输入手机号
+		checkCNbind($mobile, checkOnlyMobile);
 		// 绑定详细地址输入事件
 		$detail.bind('input propertychange', function () {
 			// 验证非法输入
@@ -628,6 +686,21 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 			return true;
 		}
 	};
+
+	// 验证只能输入手机号
+	var checkOnlyMobile = function (el) {
+		// console.log(el);
+		// 获取输入框值
+		var inputTxt = el.value;
+		// console.log(inputTxt);
+		// 替换输入框获取的字符
+		var str = inputTxt.replace(/^([^1])|[^\d]+/g, ''); //	/^(0+)|[^\d]+/g;
+		// obj.value=obj.value.replace(/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/g,'');
+		// console.log(str);
+		// 替换输入框值
+		el.value = str;
+	};
+
 	// 验证非法输入
 	var checkIllegalInput = function (el) {
 		// 非法输入正则
@@ -638,6 +711,32 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 		var str = inputTxt.replace(pattern, '');
 		// 替换输入框值
 		$(el).val(str);
+	};
+
+	// 绑定包含中文输入验证
+	var checkCNbind = function (el, callback) {
+		/**
+		 * @param flag: 用于标记是否是非直接的文字输入
+		 */
+		var flag = false;
+		el.on({
+			input : function(e){
+				if(!flag) {
+					// 验证非法输入
+					callback && callback(this);
+				}
+			},
+			compositionstart : function(e){
+				flag = true;
+			},
+			compositionend : function(e){
+				flag = false;
+				if(!flag) {
+					// 验证非法输入
+					callback && callback(this);
+				}
+			}
+		});
 	};
 
 	// 载入省市区列表模板
@@ -831,6 +930,8 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 			ajax.reqDataApi(ajax.config,function (res) {
 				console.log(res);
 				if (res.ResultCode == 1) {
+					// 成功结果
+					var result = res.Result;
 					console.log(res.ResultDescription);
 					// 获取签名、订单id、订单号、版本号、包名
 					// 更新form 表单值
@@ -843,7 +944,18 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 					console.log("pay_type", $("#pay_type").val());
 					// return;
 					// 提交form支付
-					$("#paying_form").submit();
+					// $("#paying_form").submit();
+					// 判断订单金额不为0
+					if (result.is_zore) {
+						// 更新支付类型
+						// $("#pay_type").val("score");
+						$("#pay_type").val("coupon");
+						// 提交form支付
+						$("#paying_form").submit();
+					} else {
+						// 载入选择支付方式
+						loadPaymentList(null, bindPaymentEvent);
+					}
 				} else {
 					console.log(res.ResultDescription);
 					alert(res.ResultDescription);
@@ -886,6 +998,8 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 				console.log(res.Result);
 				// 存储自取地址
 				global.takingSelf = res.Result.address_info;
+				// 存储订单警告信息
+				global.notice = res.Result.countdown_notice;
 				// 判断是否有自取地址
 				if (global.takingSelf){
 					// 存储地址id

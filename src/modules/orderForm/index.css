@@ -17,6 +17,7 @@
 @import url(../../css/customs/module/province.css);
 @import url(../../css/customs/module/form.css);
 @import url(../../css/customs/module/foot.css);
+@import url(../../css/customs/module/prompt.css);
 
 /** 组件样式 */
 @import url(../../js/vendors/drawer/drawer_m.css);
@@ -25,4 +26,5 @@
 @import url(../../css/customs/examine.css);
 
 .wui_wrapper { background: #f1f5f7;  }
+.prompt { padding: .2rem 0% .2rem 4%; width: 96%; margin-bottom: .5rem; }
 

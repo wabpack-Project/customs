@@ -13,11 +13,14 @@ a{text-decoration:none;-webkit-tap-highlight-color: rgba(0,0,0,0);outline: 0;}
   /*overflow-x:hidden;  --勿改，页面显示有影响-- */
 }
 .clearfix:after{content:"";display:block;height:0;clear:both;visibility:hidden}
-input,textarea,select{-webkit-appearance: none;-webkit-tap-highlight-color:rgba(0,0,0,0);background:none;}
+input,textarea,select{-webkit-appearance: none;-webkit-tap-highlight-color:rgba(0,0,0,0);background:none; -webkit-user-select: auto; }
 html,body { color:#444; height: 100%; }
 
 input::-webkit-input-placeholder{
   color: #888;opacity:1;
 }
+* { -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
 
 

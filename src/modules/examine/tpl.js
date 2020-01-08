@@ -56,7 +56,7 @@
 			'        <div class="p_item_des">\n' +
 			'          <div class="triangle-up"></div>\n' +
 			'          <div class="p_item_con">\n' +
-			'            包含项目：<%=packageInfo.introduction||""%>\n' +
+			'            <%=packageInfo.introduction||""%>\n' +
 			'          </div>\n' +
 			'        </div>\n' +
 			'        <%\n' +

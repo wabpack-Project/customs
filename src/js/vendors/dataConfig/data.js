@@ -26,8 +26,8 @@ data = {
 	vacc_getbabylist: {
 		reqUrl	: "drugstore/tab:stock_adjust/adjust:output/act:edit",
 		reqDevUrl	: "http://m.lk.cn/1/vacc_getbabylist",
-		reqJson : "../../src/data/adjust_output_edit.json",
-		flag		: false
+		reqJson : "../../src/data/babylist.json",
+		flag		: true
 	},
 	vacc_getbabyinfo: {
 		reqUrl	: "drugstore/tab:stock_adjust/adjust:output/act:edit",

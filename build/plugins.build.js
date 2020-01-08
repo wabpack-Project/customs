@@ -31,7 +31,7 @@ module.exports = [
 	new extractTextPlugin(commonConfig.css.build),
 
 	// uglifyjs
-	new uglifyPlugin(),
+	// new uglifyPlugin(),
 
 	// html 生成(把js插入到页面)
 	new htmlPlugin(commonConfig.html.build),

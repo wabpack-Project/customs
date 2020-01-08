@@ -8,7 +8,7 @@ var tpl = '<div class="popup">\n' +
 	'    <div class="pop_body">\n' +
 	'      <div class="qrCode">\n' +
 	'        <div class="qc_img"><img src="../../../asset/images/qrcode.jpg"></div>\n' +
-	'        <div class="qc_time">距离二维码过期还剩 <span>1分15秒</span></div>\n' +
+	'        <div class="qc_time">二维码 <span>2</span>分钟后过期</div>\n' +
 	'        <div class="qc_des">请用微信扫描</div>\n' +
 	'      </div>\n' +
 	'    </div>\n' +
@@ -28,24 +28,24 @@ is_wx = false;
   // 第一种 数据替换模板方式
 	// 加载二维码
 	// /*
-	qrCode(function () {
-		return miniTpl(tpl, data);
-	}, function (el) {
-		// 对应绑定事件和回调处理
-		console.log("回调函数！！！");
-		console.log(el);
-	});
+	// qrCode(function (el) {
+	// 	// 对应绑定事件和回调处理
+	// 	console.log("回调函数！！！");
+	// 	console.log(el);
+	// }, function () {
+	// 	return miniTpl(tpl, data);
+	// });
 	// */
 
 	// 第二种 直接传入模板
 	// 加载二维码
-	// qrCode(tpl, function () {
+	// qrCode(function () {
 	// 	console.log("事件绑定！！！");
-	// });
+	// }, tpl);
 
 	// 第三种没有参数直接跳出
 	// 加载二维码
-	// qrCode();
+	qrCode();
 
 // }
 

@@ -12,7 +12,21 @@
 })(this, function() {
 	// 设置默认参数
 	var global = {
-		defTpl: '',
+		defTpl: '<div class="popup">\n' +
+			'  <div class="popup_mask"></div>\n' +
+			'  <div class="popup_out">\n' +
+			'    <div class="pop_head">\n' +
+			'      <div class="qc_price">支付金额：<span><em>￥</em>1256.25</span></div>\n' +
+			'    </div>\n' +
+			'    <div class="pop_body">\n' +
+			'      <div class="qrCode">\n' +
+			'        <div class="qc_img"><img src="../../../asset/images/qrcode.jpg"></div>\n' +
+			'        <div class="qc_time">该二维码 <span>2分钟</span>后过期</div>\n' +
+			'        <div class="qc_des">请用微信扫描</div>\n' +
+			'      </div>\n' +
+			'    </div>\n' +
+			'  </div>\n' +
+			'</div>',
 	};
 
 	/**
@@ -72,12 +86,12 @@
 	};
 
 	// 载入html到页面
-	var insertHtml = function (tplCallback, callback, apendEl) {
+	var insertHtml = function (callback, tplCallback, apendEl) {
 		var _html, _dom;
 
 		// 判断tplCallback类型，设置模板
 		if (!tplCallback){		// 参数不存在，不运行模块
-			return;
+			_html = global.defTpl;
 		} else if (isFunction(tplCallback)) {	// 数据替换html变量生成模板
 			// 渲染模板
 			_html = tplCallback();
@@ -118,9 +132,9 @@
 	};
 
 	// 初始化方法
-	var init = function (tplCallback, callback, apendEl) {
+	var init = function (callback, tplCallback, apendEl) {
 		// 插入html
-		insertHtml(tplCallback, callback, apendEl);
+		insertHtml(callback, tplCallback, apendEl);
 	};
 	return init;
 });

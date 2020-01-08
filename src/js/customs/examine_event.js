@@ -31,6 +31,8 @@ var tpl = require("../../modules/examine/tpl");
 var imgSrc = require('../../images/customs/drugBox.png');
 // var imgBanner = require('../../images/customs/banner.jpg');
 console.log(imgSrc);
+var svgSrc = require('../../images/customs/jiazai.svg');
+console.log(svgSrc);
 // console.log(imgBanner);
 // 本地数据引用
 // var customsJson = require('../../data/customs.json');
@@ -120,7 +122,7 @@ console.log(imgSrc);
 	// 验证非法输入
 	var checkIllegalInput = function (el) {
 		// 非法输入正则
-		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|｛｝【】‘；：”“'。，、？]");
 		// 获取输入框值
 		var inputTxt = $(el).val();
 		// 替换输入框获取的字符
@@ -128,6 +130,46 @@ console.log(imgSrc);
 		// 替换输入框值
 		$(el).val(str);
 	};
+
+	// 绑定包含中文输入验证
+	var checkCNbind = function (el) {
+		/**
+		 * @param flag: 用于标记是否是非直接的文字输入
+		 */
+		var flag = false;
+		el.on({
+			'compositionstart': function(e) {
+				flag = true;
+			},
+			'compositionend': function(e) {
+				flag = false;
+				if(!flag) {
+					// 验证非法输入
+					checkIllegalInput(this);
+				}
+			},
+			'input propertychange': function(e) {
+				if(!flag) {
+					// 验证非法输入
+					checkIllegalInput(this);
+				}
+			}
+		});
+	};
+
+	// 验证只能输入正整数
+	var checkInteger = function (el) {
+		// 只能输入数字正则
+		var pattern = /^(0+)|[^\d]+/g;
+		// 获取输入框值
+		var inputTxt = el.value;
+		// 替换输入框获取的字符
+		var str = inputTxt.replace(pattern,'');
+		// 替换输入框值
+		el.value = str;
+	};
+
+
 
 	/**
 	 * 模板
@@ -148,7 +190,7 @@ console.log(imgSrc);
 			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:registration_sale_item",
 			reqDevUrl	: "2/lancare_customhouse_interface_Tianjin/api:registration_sale_item",
 			reqJson : "../../service/examine/customs.json",
-			flag		: true
+			flag		: false
 		},
 		submitExamine: {
 			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:add_purchase_sale_item",
@@ -193,6 +235,10 @@ console.log(imgSrc);
 	 */
 	// 载入预约主界面
 	var loadCustoms = function (id) {
+		console.log(global.rightBtnInfo);
+		// 显示右上角按钮
+		showRightTextButton(global.rightBtnInfo.context_string, "rightTextButtonHand()", 0);
+
 		// console.log(data.cacheCustoms);
 		// console.log(data.cacheCustoms.sale_list);
 		// console.log(tpl);
@@ -202,6 +248,12 @@ console.log(imgSrc);
 		$(".wui_wrapper").append(_html);
 		// 显示底部按钮
 		$(".footer").show();
+
+		var svgHtml = '<img src="' + svgSrc + '" >';
+		$(".foot_opt").append(svgHtml);
+		var svgHtml = '<img src="../../images/customs/jiazai.svg" >';
+		$(".foot_opt").append(svgHtml);
+
 		// 绑定事件
 		bindEvent(id);
 	};
@@ -291,10 +343,11 @@ console.log(imgSrc);
 		// 绑定点击选中事件
 		$cp_select.click(selectClickHand);
 
-		// 根据hash进行跳转
+		// 获取自选药套餐元素，根据hash进行操作
 		if (location.hash.indexOf("drug") >= 0){
 			// alert("location.hash");
-			$cp_select.eq(5).click();
+			// $cp_select.eq(5).click();
+			$("[attr_id='10']").click();
 		}
 		
 		// 绑定已选登记点击事件
@@ -334,22 +387,24 @@ console.log(imgSrc);
 
 	// 立即预约事件
 	var appointmentHand = function (id, el, appEl) {
-		// console.log("立即预约事件");
+		console.log("立即预约事件");
+		// 设置默认不需要预约
+		global.related = false;
 		// 判断是否需要预约
 		if ($("[attr_related='1']").find(".iconiconfontxuanzhong4").length > 0){
 			// console.log("需要预约！");
 			global.related = true;
 		}
-		// global.related = false;
+		// 提交立即预约，禁用按钮
+		$(appEl).attr("disabled", "disabled");
 		// 需要预约时间操作
 		if (global.related){
-			timeHand(id);
+			timeHand(id, appEl);
 			return;
 		}
 		console.log(global.data);
 		// 提交预约
 		submitExamine(id, appEl);
-
 	};
 
 	// 点击下拉事件
@@ -564,7 +619,7 @@ console.log(imgSrc);
 		} else if (id == 3){
 			// 3是入境，获取入境信息
 			// var entryArr = signData.list_for_entry;
-			loadSignInfo(signData.list_for_entry, signData, id, n, signData.copy_info_for_entry);
+			loadSignInfo(signData.list_for_entry, signData, id, n, signData.copy_info_for_entry, true);
 		} else {
 			// 1或2是出境，获取出境信息
 			// var entryArr = signData.list_for_exit;
@@ -572,7 +627,7 @@ console.log(imgSrc);
 		}
 	};
 	// 根据选项匹配登记信息
-	var loadSignInfo = function (d, signData, id, n, copyD) {
+	var loadSignInfo = function (d, signData, id, n, copyD, flag) {
 		console.log(d);
 		console.log(signData);
 		// 判断登记信息是否存在
@@ -583,6 +638,11 @@ console.log(imgSrc);
 			loadDraw(tpl.signUpdate, copyD, function (el) {
 				// 更改弹出层标题
 				el.find(".dw_h_name").text(copyD.title);
+				// 判断是入境默认填入目的地
+				if (flag) {
+					// 更改目的地
+					el.find("#destination").val(copyD.destination_default_string);
+				}
 				// 绑定事件
 				bindSignUpdateHand(el, signData.is_application_related_string, id, n);
 			}, n, id);
@@ -624,14 +684,18 @@ console.log(imgSrc);
 		});
 
 		// 绑定目的地输入事件
-		$destination.bind('input propertychange', function () {
-			// 验证非法输入
-			checkIllegalInput(this);
-		});
+		checkCNbind($destination);
+
+		// 绑定目的地输入事件
+		// $destination.bind('input propertychange', function () {
+		// 	// 验证非法输入
+		// 	checkIllegalInput(this);
+		//
+		// });
 		// 绑定停留时间输入事件
 		$duration.bind('input propertychange', function () {
-			// 验证非法输入
-			checkIllegalInput(this);
+			// 验证只能输入数字
+			checkInteger(this);
 		});
 	};
 	// 修改登记出入境验证
@@ -705,7 +769,7 @@ console.log(imgSrc);
 				selectHand($("#cp_" + signId).find(".p_select"));
 				// 存储选中信息
 				// global.data.selectArr.push(sale_list[k]);
-				global.data.selectArr[signId] = sale_list[k];
+				global.data.selectArr[signId] = sale_list[n];
 				// 获取价格
 				// global.signPrice = sale_list[n].price;
 				global.price[signId] = sale_list[n].price;
@@ -723,23 +787,32 @@ console.log(imgSrc);
 	};
 
 	// 预约时间事件
-	var timeHand = function (id) {
+	var timeHand = function (id, appEl) {
 		// console.log("预约时间事件");
 		// console.log(data.cacheCustoms.register_list.date);
 		// 获取预约时间数据
 		var timeData = data.cacheCustoms.register_list.date;
 		// 载入预约时间
 		loadDraw(tpl.timeList, timeData, function (el) {
+
 			// 绑定事件
-			bindTimeHand(el, timeData, id);
+			bindTimeHand(el, timeData, id, appEl);
 		});
 	};
 	// 绑定登记列表点击事件
-	var bindTimeHand = function (el, d, id) {
+	var bindTimeHand = function (el, d, id, appEl) {
 		// 获取登记列表
 		var $s_sign = el.find("li"),				// 登记列表
+			$dw_mask = el.find(".drawer_mask"),
 			$related_sign = $(".related_sign");		// 页面文字信息展示
-		// 绑定点击事件
+		// 绑定背景点击事件
+		$dw_mask.click(function () {
+			// 移除预约时间
+			el.remove();
+			// 启用立即预约按钮
+			$(appEl).removeAttr("disabled");
+		});
+		// 绑定点击预约时间事件
 		$s_sign.click(function () {
 			// 获取登记id和循环编号
 			var n = this.getAttribute("data-id");
@@ -878,6 +951,8 @@ console.log(imgSrc);
 
 			// 绑定事件
 			bindDrawEvent(el, physicalOpt);
+			// 隐藏类别匹配
+			$(".select_list_category").hide();
 			// 绑定类别匹配事件
 			$(".select_list_category dt").click(sortOpt);
 
@@ -1119,8 +1194,10 @@ console.log(imgSrc);
 		// 储存旧的url
 		global.oldUrl = location.href;
 		// alert("oldUrl", global.oldUrl);
-		// 把当前url添加到历史记录
-		history.pushState(null, null, location.href + "#hash");
+		if (location.hash.indexOf("drug") < 0) {
+			// 把当前url添加到历史记录
+			history.pushState(null, null, location.href + "#drug");
+		}
 		// alert(location.hash);
 		// 载入药品列表
 		loadDrug(tpl.drug, data.cacheCustoms.sale_list[n].children);
@@ -1271,7 +1348,8 @@ console.log(imgSrc);
 		var drugArr = d.drug,
 			$drug = $(el).parents("li"),	// 当前药品
 			id_ = $drug.attr("data-v"),			// 药品id
-			cat = $drug.attr("data-cat");		// 药品分类
+			cat = $drug.attr("data-cat"),		// 药品分类
+			$otherDrug = $(".d_list").find(".drug_"+id_).not($drug); // 在其他类别里的和当前药品一样的药
 		// console.log(0, $drug, 1, id_, 2, cat, 3, d, 4, v, 5, el);
 		// 更新购物总数
 		global.data.drugInfo.total_num -= 1;
@@ -1282,9 +1360,17 @@ console.log(imgSrc);
 		global.data.drugInfo.total_price = (parseFloat(global.data.drugInfo.total_price) - parseFloat(drugPrice)).toFixed(2);
 		// 更新药品数量
 		drugArr[cat].goods_list[id_].num = v;
-		// 更新购物车信息(已存在该商品可以不更新)
-		// global.data.drugInfo.data[id_] = drugArr[cat].goods_list[id_];
-		// console.log(global.data.drugInfo.data[id_]);
+		// 更新在其他类别里的当前药品数量和显示减号
+		$otherDrug.find(".text_change").val(v);
+		// 判断购买药品数量为0
+		if (v == 0){
+			// 更新页面药品显示状态
+			$otherDrug.find(".cut").hide();
+			$otherDrug.find(".text_change").val("");
+			// 更新购物车信息(数量为0时，删除该药品)
+			delete global.data.drugInfo.data[id_];
+		}
+
 		console.log(global.data.drugInfo);
 		// 赋值数量和价格
 		setShopCartHtml(global.data.drugInfo);
@@ -1295,7 +1381,8 @@ console.log(imgSrc);
 		var drugArr = d.drug,
 			$drug = $(el).parents("li"),	// 当前药品
 			id_ = $drug.attr("data-v"),			// 药品id
-			cat = $drug.attr("data-cat");		// 药品分类
+			cat = $drug.attr("data-cat"),		// 药品分类
+			$otherDrug = $(".d_list").find(".drug_"+id_).not($drug); // 在其他类别里的和当前药品一样的药
 		// console.log(0, $drug, 1, id_, 2, cat, 3, d, 4, v, 5, el);
 		// 更新购物总数
 		global.data.drugInfo.total_num += 1;
@@ -1306,6 +1393,9 @@ console.log(imgSrc);
 		global.data.drugInfo.total_price = (parseFloat(drugPrice)+parseFloat(global.data.drugInfo.total_price)).toFixed(2);
 		// 更新药品数量
 		drugArr[cat].goods_list[id_].num = v;
+		// 更新在其他类别里的当前药品数量和显示减号
+		$otherDrug.find(".text_change").val(v);
+		$otherDrug.find(".cut").show();
 		// 更新购物车信息
 		global.data.drugInfo.data[id_] = drugArr[cat].goods_list[id_];
 		// 判断是不是第一次添加,第一次添加新增药品信息，否则购车增加数量
@@ -1562,6 +1652,7 @@ console.log(imgSrc);
 						alert(res.Result.exist_unpaid_register_bill_notice);
 						// 跳转到预约信息
 						location.href = res.Result.exist_unpaid_register_bill_url;
+					// location.replace(res.Result.exist_unpaid_register_bill_url);
 				}
 
 				// 缓存数据
@@ -1572,6 +1663,8 @@ console.log(imgSrc);
 				global.application_complete_unregistered = res.Result.application_complete_unregistered;
 				// 存储关联登记标识
 				global.is_application_related = res.Result.is_application_related;
+				// 储存右上角按钮信息
+				global.rightBtnInfo = res.Result.record_top_right;
 				// 存储是否有预约标识
 				global.register_bill = {
 					billFlag: res.Result.is_exist_unpaid_register_bill, 		// 预约标识
@@ -1664,12 +1757,16 @@ console.log(imgSrc);
 		ajax.config.data = {
 			data: JSON.stringify(_obj)
 		};
+		ajax.config.complete = function() {
+			// 提交成功，启用按钮
+			$(el).removeAttr("disabled");
+		};
 		// console.log(ajax.config.data);
+		// 阻止预约跳转
 		// return;
 		// 禁用立即预约
 		// global.isflag = true;
-		// 提交立即预约，禁用按钮
-		$(el).attr("disabled", "disabled");
+
 		// console.log(global.isflag);
 		// 请求数据
 		ajax.reqDataApi(ajax.config,function (res) {
@@ -1684,8 +1781,6 @@ console.log(imgSrc);
 			}
 			// 启用立即预约
 			// global.isflag = false;
-			// 提交成功，启用按钮
-			$(el).attr("disabled", "disabled");
 		});
 	};
 
@@ -1755,8 +1850,52 @@ console.log(imgSrc);
 		// if (typeof ios_app != 'undefined' && ios_app) {
 		// 	// history.go(-1);
 		// }
+		// 移除药品列表
 		$(".drug").remove();
+		// 移除购物车药品记录
+		$(".drawer").remove();
 	}, false);
+
+	// 绑定访问记录发生变化
+	window.addEventListener("visibilitychange", function(e){
+		showRightTextButton("", "", 1);
+	});
+
+	// 绑定每次加载页面事件
+	window.addEventListener("pageshow", function(e){
+		if (e.persisted && ios_app) {
+			// window.location.reload();
+		}
+	});
+
+	/**
+	 * 显示右上角按钮
+	 * @param {string} txt 		显示的名称
+	 * @param {string} callback 		点击回调的函数名称
+	 * @param {0or1} showType 		点击回调的函数名称
+	 * */
+	var showRightTextButton = function (txt, callback, showType) {
+		if(android_app){
+			window.LanCareWeb.showRightTextButton(txt, callback, showType);
+		} else if(ios_app){
+			window.webkit.messageHandlers.Lancare.postMessage({
+				classname: 'showRightButton',
+				type: showType,
+				buttonText: txt,
+				funName: callback
+			});
+		} else {
+			console.log("非APP直接调用方法！");
+			// rightTextButtonHand(global.rightBtnInfo);
+		}
+	};
+
+	// 右上角按钮回调方法
+	window.rightTextButtonHand = function () {
+		console.log("右上角按钮回调方法");
+		window.location.href = global.rightBtnInfo.url;
+		showRightTextButton("", "", 1);
+	};
 
 	/**
 	 * 初始化方法
@@ -1776,7 +1915,7 @@ console.log(imgSrc);
 		// 	// 回调方法
 		// 	$(".wui_wrapper").css("top", "2.5rem");
 		// });
-		// debugger
+		// 请求预约列表信息
 		examine(id);
 		// examine11(id);
 	};

@@ -19,8 +19,10 @@
 @import url(../../css/customs/module/base_info.css);
 @import url(../../css/customs/module/popUp.css);
 @import url(../../css/customs/module/foot.css);
-
-@import url(../../css/customs/module/qrCode.css);
+/* 二维码支付 */
+@import url(../../js/vendors/qrCode/css/qrCode.css);
+/* 支付方式 */
+@import url(../../js/vendors/payment/css/payment.css);
 
 /***
  * 组件样式

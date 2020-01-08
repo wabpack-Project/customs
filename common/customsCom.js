@@ -14,9 +14,16 @@ let commonConfig = {
 	devPort: 8081,
 	// 发布目录
 	buildPath: '../dist/',
+	// 发布目录子目录和组件指向目录
+	buildSubdirectory: '/instructions',
 	// 相对路径
 	relativePath: 'themes/simplicity/',
-	// relativePath: '//img.lancare.cc/',
+	// 发布端口
+	openBuildPort: 8082,
+	// url指向静态文件目录
+	openBuildPath: './dist/',
+	// url指向静态文件地址
+	openBuildUrl: '/themes/simplicity/html/mobile_iphone/lancarecustomhouseinterfaceTianjin.html',
 };
 
 // 公共类库和全局

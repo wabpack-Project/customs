@@ -5,16 +5,16 @@
 .cp_list li:first-child { border-top:none; }
 .p_item { }
 .p_item_opt { }
-.p_item_tit { padding:0 2rem; line-height: 2rem; font-size: .8rem; }
-.p_price { color: #ff6050; font-size: .9rem; padding-right: .5rem; }
+.p_item_tit { padding:0 1.9rem 0 1.6rem; line-height: 2rem; font-size: .75rem; }
+.p_price { color: #ff6050; font-size: .8rem; padding-right: .5rem; }
 .p_price em {font-size: .6rem; }
 /* 下拉展示内容 */
 .p_item_des { position: relative; margin-top: .45rem; display: none; }
 .p_item_des .triangle-up { margin: -.2rem 0 -.01rem 2rem; }
-.p_item_con { border-radius: .3rem; background: #f1f5f7; padding: .5rem; line-height: 1rem; }
+.p_item_con { border-radius: .3rem; background: #f1f5f7; padding: .5rem; font-size: .65rem; line-height: 1rem; }
 /* 左右图标 */
 .p_item_opt .fl { padding-top: .46rem; }
-.fr.opt_drop { margin: .3rem .3rem 0 0; height: 1.5rem; width: 1.7rem; text-align: right; border-left: 1px #eee solid; }
+.fr.opt_drop { margin: .3rem .3rem 0 0; height: 1.5rem; width: 1.6rem; text-align: right; border-left: 1px #eee solid; }
 .p_select { font-size: 1rem; }
 .p_drop { font-size: 1rem; padding-top: .26rem; display: inline-block; }
 .iconxuanzhong { color: #ddd; }

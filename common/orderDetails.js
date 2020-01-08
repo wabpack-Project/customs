@@ -78,8 +78,8 @@ commonConfig.html = {
 			collapseWhitespace: true,
 		},
 		// PHP打包写法
-		filename: commonConfig.relativePath + 'html/mobile_iphone/lancarecustomhouseinterfaceTianjin-pay.php',
-		template: commonConfig.devPath + 'page/orderForm_build.html',
+		filename: commonConfig.relativePath + 'html/mobile_iphone/dh_orderinfo.php',
+		template: commonConfig.devPath + 'page/orderDetails_build.html',
 		// 默认写法
 		// filename: commonConfig.relativePath + 'html/mobile_iphone/lancarecustomhouseinterfaceTianjin-pay.html',
 		// template: commonConfig.devPath + 'page/orderForm.html',

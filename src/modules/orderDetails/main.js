@@ -4,4 +4,4 @@ var orderDetails = require("../../js/customs/order_details_event").orderDetails;
 import './index.css';
 
 // 初始化触发业务
-orderDetails(userId);
+orderDetails(orderId, pageTitle);

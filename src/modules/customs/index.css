@@ -7,6 +7,10 @@
 @import url(../../css/customs/module/common.css);
 @import url(../../css/customs/module/head.css);
 @import url(../../css/customs/module/nav.css);
+@import url(../../css/customs/module/FAQ.css);
+@import url(../../css/customs/module/notice.css);
 
 /** 业务样式 */
 @import url(../../css/customs/examine.css);
+
+.wui_wrapper { bottom: 0; }

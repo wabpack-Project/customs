@@ -11,6 +11,7 @@ var registerSrc = require('../../images/customs/register.png');
 var recordSrc = require('../../images/customs/record.png');
 var faqSrc = require('../../images/customs/faq.png');
 var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
+var noticeSrc = require('../../images/customs/notice.png');
 // var imgBanner = require('../../images/customs/banner.jpg');
 // console.log(imgSrc);
 /**
@@ -62,7 +63,36 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 			'    %>\n' +
 			'  </ul>\n' +
 			'</div>\n' +
-			'<!-- end -->\n',
+			'<!-- FAQ -->\n' +
+			'<%\n' +
+			'var m, faqInfo = data.qa_info;\n' +
+			'if(faqInfo && faqInfo != {}) {\n' +
+			'%>\n' +
+			'<div class="notice">\n' +
+			'  <div class="nt_head">\n' +
+			'    <img class="fl mid" src="../images/customs/notice.png" >\n' +
+			'    <a class="fr" href="<%=navData.qa.url%>" ><em class="iconfont iconyoujiantou fr"></em>更多</a>\n' +
+			'    <span>FAQ</span>\n' +
+			'  </div>\n' +
+			'  <ul class="faq_list">\n' +
+			'    <%\n' +
+			'    var n = 0, faqData = faqInfo.qa, len = faqData.length;\n' +
+			'    for(; n < len; n++){\n' +
+			'    var faqConInfo = faqData[n];\n' +
+			'    %>\n' +
+			'    <li>\n' +
+			'      <div class="faq_tit"><%=faqConInfo.question%></div>\n' +
+			'      <div class="faq_des"><%=faqConInfo.answer%></div>\n' +
+			'    </li>\n' +
+			'    <%\n' +
+			'    }\n' +
+			'    %>\n' +
+			'  </ul>\n' +
+			'</div>\n' +
+			'<%\n' +
+			'}\n' +
+			'%>\n' +
+			'<!-- end -->',
 	};
 
 	/**
@@ -91,6 +121,8 @@ var imgArr = [reserveSrc, registerSrc, recordSrc, faqSrc];
 			var _html = miniTpl(_tpl.customs, data.cacheCustoms);
 			// 插入DOM
 			$(".wui_wrapper").append(_html);
+			// 替换FAQ图标
+			$(".nt_head").find("img").attr("src", noticeSrc);
 			// 判断图片数组是否存在，替换导航图标
 			if (imgArr.length > 0){
 				$(".nav_list li").each(function (n) {

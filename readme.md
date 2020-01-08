@@ -1,7 +1,6 @@
 ### 拆分打包
 webpack --config config/webpack.config.mod.js
 
-
 // install project dependencies
 npm install
 ### 单模块打包

@@ -16,7 +16,7 @@ var getRequest = function() {
 	}
 	return theRequest;
 };
-// 获取地址栏参数(返回指定参数)
+// 获取地址栏参数(返回指定参数) （注：参数中包含？&时，会自动分割。造成值不对）
 var getRequestParam = function (str) {
 	var searchStr = window.location.search;
 	// 判断地址栏上有参数

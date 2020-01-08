@@ -74,20 +74,21 @@
 	 * @param {Object} obj 			Ajax 请求参数
 	 * @param {function} callback Ajax 请求回调函数
 	 * */
-	var reqDataApi = function (obj, callback, errorCallback, completeCallback) {
+	var reqDataApi = function (obj, callback) {
 		$.ajax({
 			url: obj.url,
 			type: obj.type,
 			dataType: obj.dataType,
 			data: obj.data,
-			success: function (res) {
+			
+			success: function (data, textStatus) {
 				if (callback) {
-					callback(res);
+					callback(data, textStatus);
 				}
 			},
-			complete: function () {
-				if (completeCallback) {
-					completeCallback();
+			complete: function (XMLHttpRequest, textStatus) {
+				if (obj.complete) {
+					obj.complete(XMLHttpRequest, textStatus);
 				}
 			},
 			error: function(XMLHttpRequest,textStatus,errorThrown){
@@ -95,8 +96,8 @@
 				// this;    //调用本次ajax请求时传递的options参数
 				// console.log(this);
 				console.log(XMLHttpRequest);
-				if (errorCallback) {
-					errorCallback();
+				if (obj.error) {
+					obj.error(XMLHttpRequest,textStatus,errorThrown);
 				}
 			}
 		});

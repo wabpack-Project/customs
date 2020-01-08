@@ -14,6 +14,18 @@
 		// 订单提交
 		orderForm: '<div class="wui_wrapper">\n' +
 			'  <%\n' +
+			'  if(data.is_register_record) {\n' +
+			'  %>\n' +
+			'  <!-- 警告 -->\n' +
+			'  <div class="prompt p_warning">\n' +
+			'    <span class="iconfont iconwarning"></span>\n' +
+			'    <em><%=data.countdown_notice.active||\'\'%></em>\n' +
+			'  </div>\n' +
+			'  <%\n' +
+			'  }\n' +
+			'  %>\n' +
+			'  \n' +
+			'  <%\n' +
 			'  if(data.is_drugpackage) {\n' +
 			'  %>\n' +
 			'  <!-- 取药方式 -->\n' +
@@ -44,7 +56,7 @@
 			'      %>\n' +
 			'      <div class="addr_info">\n' +
 			'        <div class="addr_con">\n' +
-			'          <p>收货地址：<%=addressInfo.address||""%></p>\n' +
+			'          <p>取药地址：<%=addressInfo.address||""%></p>\n' +
 			'        </div>\n' +
 			'      </div>\n' +
 			'      <%\n' +
@@ -110,6 +122,8 @@
 			'  if(k == 10) {\n' +
 			'    var orderTit = orderDetail.key_context_Chinese,\n' +
 			'      flag = true;\n' +
+			'  } else {\n' +
+			'    flag = false;\n' +
 			'  }\n' +
 			'  var isShow = flag ? \'display:inline-block\' : \'display:none\';\n' +
 			'  if(len > 0){\n' +
@@ -341,7 +355,7 @@
 		takingSelfAddrInfo : '<div class="addr_info" data-id="<%=data.id||\'\'%>" >\n' +
 			'  <div class="fr"><span class="iconfont iconyoujiantou "></span></div>\n' +
 			'  <div class="addr_con">\n' +
-			'    <p>收货地址：<%=data.address||""%></p>\n' +
+			'    <p>取药地址：<%=data.address||""%></p>\n' +
 			'  </div>\n' +
 			'</div>',
 		// 运费
