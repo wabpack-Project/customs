@@ -262,7 +262,7 @@
 			'      <div class="fr" style="display: none">\n' +
 			'        <a href="javascript:;" class="confirm <%=data.sureBtn+\'-\'+data.hash%>">确认</a>\n' +
 			'      </div>\n' +
-			'      <div class="dw_h_name">选择预约时间</div>\n' +
+			'      <div class="dw_h_name">选择预约时间段</div>\n' +
 			'    </div>\n' +
 			'    <div class="dw_body dw_m92">\n' +
 			'      <ul class="select_time">\n' +
@@ -273,7 +273,7 @@
 			'        %>\n' +
 			'        <li class="clearfix"  data-id="<%=i%>" >\n' +
 			'          <div class="s_time_data fl"><%=timeSlotInfo.time_string||""%></div>\n' +
-			'          <div class="s_time_count fr">剩余<%=timeSlotInfo.register_amount_limited||""%></div>\n' +
+			'          <div class="s_time_count fr">剩余<%=timeSlotInfo.left_amount||""%></div>\n' +
 			'        </li>\n' +
 			'        <%\n' +
 			'        }\n' +

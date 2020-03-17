@@ -886,7 +886,7 @@ console.log(svgSrc);
 			// 提交预约
 			submitExamine(id);
 			// 关闭弹出层
-			// el.remove();
+			el.remove();
 		});
 	};
 
@@ -1853,6 +1853,8 @@ console.log(svgSrc);
 			application: global.data.application_complete_unregistered,
 			// 预约时间
 			register:  global.data.timeArr,
+			// 预约时间段
+			time_period: global.data.timeSlotArr,
 		};
 		console.log(_obj);
 		// 对象转字符串

@@ -53,7 +53,11 @@ npm run build-init projectB
 
 npm run build-init projectC
 
+#### 预览构建代码
+npm run open-mod-build
 
+#### 打包并构建代码，预览构建代码
+npm run start-mod-build projectA
 
 
 
