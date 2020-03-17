@@ -20,10 +20,6 @@
 			'  <div class="tit"><%=headInfo[0]%></div>\n' +
 			'  <div class="des"><%=headInfo[1]%></div>\n' +
 			'</div>\n' +
-			'<!-- 服务图片 -->\n' +
-			'<div class="service_img">\n' +
-			'\n' +
-			'</div>\n' +
 			'<!-- 选择套餐 -->\n' +
 			'<div class="choose_package" >\n' +
 			'  <div class="column_name">\n' +
@@ -224,7 +220,7 @@
 			'  <div class="drawer_out">\n' +
 			'    <!--<div class="drawer_cont">-->\n' +
 			'    <div class="dw_head dw_m92">\n' +
-			'      <div class="fl" >\n' +
+			'      <div class="fl" style="display: none">\n' +
 			'        <a href="javascript:;" class="cancel <%=data.cancelBtn+\'-\'+data.hash%>">取消</a>\n' +
 			'      </div>\n' +
 			'      <div class="fr" style="display: none">\n' +
@@ -242,38 +238,6 @@
 			'        <li class="clearfix"  data-id="<%=i%>" >\n' +
 			'          <div class="s_time_data fl"><%=timeInfo.date_string||""%></div>\n' +
 			'          <div class="s_time_count fr">剩余<%=timeInfo.left_amount||""%></div>\n' +
-			'        </li>\n' +
-			'        <%\n' +
-			'        }\n' +
-			'        %>\n' +
-			'      </ul>\n' +
-			'    </div>\n' +
-			'  <!--</div>-->\n' +
-			'  </div>\n' +
-			'</div>',
-		timeSlotList: '<div class="drawer" style="display: block"  data-v="<%=data.hash%>" id="draw_<%=data.hash%>" >\n' +
-			'  <div class="drawer_mask  <%=data.maskClass+\'-\'+data.hash%>"></div>\n' +
-			'  <div class="drawer_out">\n' +
-			'    <!--<div class="drawer_cont">-->\n' +
-			'    <div class="dw_head dw_m92">\n' +
-			'      <div class="fl" >\n' +
-			'        <a href="javascript:;" class="cancel <%=data.cancelBtn+\'-\'+data.hash%>">返回</a>\n' +
-			'      </div>\n' +
-			'      <div class="fr" style="display: none">\n' +
-			'        <a href="javascript:;" class="confirm <%=data.sureBtn+\'-\'+data.hash%>">确认</a>\n' +
-			'      </div>\n' +
-			'      <div class="dw_h_name">选择预约时间</div>\n' +
-			'    </div>\n' +
-			'    <div class="dw_body dw_m92">\n' +
-			'      <ul class="select_time">\n' +
-			'        <%\n' +
-			'        var i, timeSlotData = data.data, len = timeSlotData.length;\n' +
-			'        for(i in timeSlotData){\n' +
-			'        var timeSlotInfo = timeSlotData[i];\n' +
-			'        %>\n' +
-			'        <li class="clearfix"  data-id="<%=i%>" >\n' +
-			'          <div class="s_time_data fl"><%=timeSlotInfo.time_string||""%></div>\n' +
-			'          <div class="s_time_count fr">剩余<%=timeSlotInfo.register_amount_limited||""%></div>\n' +
 			'        </li>\n' +
 			'        <%\n' +
 			'        }\n' +

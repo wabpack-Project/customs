@@ -192,9 +192,15 @@ console.log(svgSrc);
 			reqJson : "../../service/examine/customs.json",
 			flag		: false
 		},
+		serviceDetail: {
+			reqUrl	: "2/lancare_customhouse_increment/api:examination_registration_for_value_added_only",
+			reqDevUrl	: "2/lancare_customhouse_increment/api:examination_registration_for_value_added_only",
+			reqJson : "../../service/examine/customs.json",
+			flag		: false
+		},
 		submitExamine: {
-			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:add_purchase_sale_item",
-			reqDevUrl	: "2/lancare_customhouse_interface_Tianjin/api:add_purchase_sale_item",
+			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:add_purchase_sale_item_value_added_only",
+			reqDevUrl	: "2/lancare_customhouse_interface_Tianjin/api:add_purchase_sale_item_value_added_only",
 			reqJson : "../../service/examine/customs.json",
 			flag		: false
 		},
@@ -208,12 +214,6 @@ console.log(svgSrc);
 			reqUrl	: "ajax_customs_shop_cart/act:delall",
 			reqDevUrl	: "ajax_customs_shop_cart/act:delall",
 			reqJson : "../../service/examine/customs.json",
-			flag		: false
-		},
-		timeSlotList: {
-			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:time_period_limited_by_date",
-			reqDevUrl	: "2/lancare_customhouse_interface_Tianjin/api:time_period_limited_by_date",
-			reqJson : "../../service/examine/timeSlot.json",
 			flag		: false
 		},
 		cacheCustoms: "",
@@ -243,7 +243,7 @@ console.log(svgSrc);
 	var loadCustoms = function (id) {
 		console.log(global.rightBtnInfo);
 		// 显示右上角按钮
-		showRightTextButton(global.rightBtnInfo.context_string, "rightTextButtonHand()", 0);
+		// showRightTextButton(global.rightBtnInfo.context_string, "rightTextButtonHand()", 0);
 
 		// console.log(data.cacheCustoms);
 		// console.log(data.cacheCustoms.sale_list);
@@ -256,6 +256,13 @@ console.log(svgSrc);
 		$(".footer").show();
 		// 隐藏套餐介绍
 		$(".column_name").hide();
+		// 隐藏海关介绍
+		$(".declaration").hide();
+		// 更改文字
+		$("#appointment").val("立即购买");
+		// 增加服务图片
+		var serviceImg = '<img src="' + serviceInfo.img + '" >';
+		$(".service_img").append(serviceImg);
 
 		// var svgHtml = '<img src="' + svgSrc + '" >';
 		// $(".foot_opt").append(svgHtml);
@@ -279,7 +286,7 @@ console.log(svgSrc);
 	};
 
 	// 载入弹出层
-	var loadDraw = function (_tpl, _data, callback, n, id, sureCallback, cancelCallback, appEl) {
+	var loadDraw = function (_tpl, _data, callback, n, id, sureCallback, cancelCallback) {
 		// console.log(_data);
 		// console.log(_tpl);
 		// 显示模板
@@ -295,9 +302,9 @@ console.log(svgSrc);
 				// console.log("确认！");
 				sureCallback && sureCallback(el, obj, n, id, _data);
 			},
-			onCancel: function (el) {		// 触发取消或关闭后事件
+			onCancel: function (el, obj) {		// 触发取消或关闭后事件
 				// console.log("取消！");
-				cancelCallback && cancelCallback(el, appEl);
+				cancelCallback && cancelCallback(el, obj);
 			},
 		});
 	};
@@ -364,7 +371,7 @@ console.log(svgSrc);
 		});
 
 		// 模拟点击
-		// $cp_select.eq(0).click();
+		// $cp_select.eq(5).click();
 
 		// 绑定立即预约
 		$appointment.click(function () {
@@ -379,6 +386,44 @@ console.log(svgSrc);
 			// 提交预约
 			appointmentHand(id, $cp_select, this);
 		});
+		// 判断服务id存在
+		if (global.reqUrlInfo.service_id){
+			hideOtherService();
+		};
+	};
+	// 如果有服务id隐藏不需要的服务
+	var hideOtherService = function () {
+		// 遍历服务列表
+		// eachServiceList();
+		// 服务列表初始化参数
+		var service_li = $(".cp_list").find("li"), i = 0;
+		// 隐藏所有服务
+		$(service_li).hide();
+		// 遍历服务列表
+		for (; i<service_li.length; i++){
+			// console.log(service_li[i]);
+			// 获取服务	ID
+			var service_id = $(service_li[i]).attr("attr_id");
+			// 判断非当前ID隐藏
+			if (service_id == global.reqUrlInfo.service_id){
+				$(service_li[i]).show();
+				$(service_li[i]).find(".p_drop").click();
+				$(service_li[i]).click();
+			}
+		}
+	};
+
+	// 遍历服务列表
+	var eachServiceList = function () {
+		var i=0, len = data.cacheCustoms.sale_list.length;
+		for (; i<len; i++){
+			if (data.cacheCustoms.sale_list[i].id == global.reqUrlInfo.service_id) {
+				global.curService = global.curService || {};
+				global.curService.data = data.cacheCustoms.sale_list[i];
+				global.curService.num = i;
+			}
+		}
+		console.log(global.curService);
 	};
 
 	// 绑定弹出层点击事件
@@ -796,19 +841,17 @@ console.log(svgSrc);
 
 	// 预约时间事件
 	var timeHand = function (id, appEl) {
-		console.log("预约时间事件");
+		// console.log("预约时间事件");
 		// console.log(data.cacheCustoms.register_list.date);
 		// 获取预约时间数据
 		var timeData = data.cacheCustoms.register_list.date;
 		// 载入预约时间
 		loadDraw(tpl.timeList, timeData, function (el) {
-			// 隐藏剩余数量
-			$(".s_time_count").hide();
+
 			// 绑定事件
 			bindTimeHand(el, timeData, id, appEl);
-		}, null, id, null, cancelTimeHand, appEl);
+		});
 	};
-
 	// 绑定登记列表点击事件
 	var bindTimeHand = function (el, d, id, appEl) {
 		// 获取登记列表
@@ -832,62 +875,12 @@ console.log(svgSrc);
 			global.data.timeArr = d[n];
 			// console.log(global.data.timeArr);
 			console.log(global.data);
-			reqTimeSlotApi(global.data.timeArr, id, appEl);
-			// 提交预约
-			// submitExamine(id);
-			// 关闭弹出层
-			// el.remove();
-		});
-
-	};
-	// 载入预约时间段方法
-	var loadTimeSlot = function (d, id, appEl) {
-		// 载入预约时间
-		loadDraw(tpl.timeSlotList, d, function (el) {
-			// 绑定事件
-			bindTimeSlotHand(el, d, id, appEl);
-		}, null, id, null, cancelTimeHand, appEl);
-	};
-	// 预约日期取消操作
-	var cancelTimeHand = function (el, appEl) {
-		// console.log(el);
-		// console.log(appEl);
-		// 移除预约时间
-		el.remove();
-		// 启用立即预约按钮
-		$(appEl).removeAttr("disabled");
-	};
-	// 绑定时间段点击事件
-	var bindTimeSlotHand = function (el, d, id, appEl) {
-		// 获取登记列表
-		var $s_sign = el.find("li"),				// 登记列表
-			$dw_mask = el.find(".drawer_mask"),
-			$related_sign = $(".related_sign");		// 页面文字信息展示
-		// 绑定背景点击事件
-		$dw_mask.click(function () {
-			// 移除预约时间
-			el.remove();
-			// 启用立即预约按钮
-			$(appEl).removeAttr("disabled");
-		});
-		// 绑定点击预约时间事件
-		$s_sign.click(function () {
-			// 获取登记id和循环编号
-			var n = this.getAttribute("data-id");
-			// console.log(n);
-			// console.log(d);
-			// 存储选中登记信息
-			global.data.timeSlotArr = d[n];
-			// console.log(global.data.timeArr);
-			console.log(global.data);
-			// reqTimeSlotApi(global.data.timeArr);
-			// console.log(id);
-			// return;
 			// 提交预约
 			submitExamine(id);
 			// 关闭弹出层
-			// el.remove();
+			el.remove();
 		});
+
 	};
 
 	// 选择接种疫苗
@@ -1650,7 +1643,7 @@ console.log(svgSrc);
 	 * @param {Function} examine 		请求初始化信息
 	 */
 
-	// 请求预约信息接口
+		// 请求预约信息接口
 	var examine11 = function (id) {
 			// console.log(11, getRequest());
 			// console.log(22, getRequestParam("user_id"));
@@ -1696,7 +1689,7 @@ console.log(svgSrc);
 		global.userId = id;
 		// global.siteUrl = url;
 		// 请求URL
-		ajax.config.url = ajax.reqUrl(data.examine, siteUrl);
+		ajax.config.url = ajax.reqUrl(data.serviceDetail, siteUrl);
 		// http://h.lk.cn/drugstore/tab:stock_adjust/adjust:output/act:del_document
 		// 请求参数
 		ajax.config.data = global.reqUrlInfo;
@@ -1733,49 +1726,6 @@ console.log(svgSrc);
 				};
 				// 载入预约
 				loadCustoms(id);
-				// alert(res.msg);
-			} else {
-				console.log(res.ResultDescription);
-				// alert(res.msg);
-			}
-		});
-	};
-
-	// 请求事件段接口
-	var reqTimeSlotApi = function (d, id, appEl) {
-		// console.log(11, getRequest());
-		// console.log(22, getRequestParam("user_id"));
-		// 判断是请求本地json数据，请求方式设置为GET
-		if (data.timeSlotList.flag && ajax.isLocal()){
-			// 请求方式
-			ajax.config.type = "get";
-		}
-		// 请求方式
-		// ajax.config.type = "post";
-		// 存储id和url
-		// global.userId = id;
-		// global.siteUrl = url;
-		// 请求URL
-		ajax.config.url = ajax.reqUrl(data.timeSlotList, siteUrl);
-		// ajax.config.url = '../../data/customs.json';
-		// http://h.lk.cn/drugstore/tab:stock_adjust/adjust:output/act:del_document
-		// 请求参数
-		ajax.config.data = {
-			unix_time: d.unix_time,
-			// data: JSON.stringify(d),
-		};
-		// ajax.config.data = JSON.stringify(d);
-		console.log(ajax.config.data);
-		// 请求数据
-		ajax.reqDataApi(ajax.config, function (res) {
-			console.log(res);
-			if (res.ResultCode == 1) {
-				// console.log(res.ResultDescription);
-				// 缓存数据
-				// data.cacheCustoms = res.Result;
-				// var timeData = data.cacheCustoms.register_list.date;
-				// 载入预约
-				loadTimeSlot(res.Result, id, appEl);
 				// alert(res.msg);
 			} else {
 				console.log(res.ResultDescription);
@@ -2018,7 +1968,6 @@ console.log(svgSrc);
 		// 	// 回调方法
 		// 	$(".wui_wrapper").css("top", "2.5rem");
 		// });
-
 		// 请求预约列表信息
 		examine(id);
 		// examine11(id);

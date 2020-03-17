@@ -1,7 +1,10 @@
 /*body { background: #f1f5f7; }*/
 
 .banner { }
-.banner img { width: 100%; }
+.banner img { width: 100%; display: block; }
+
+.service_img {}
+.service_img img { width: 100%; display: block; }
 
 .declaration { width: 92%; padding: .5rem 4%; background: #fff; }
 .declaration .tit { font-size: .8rem; line-height: 1.8rem; color: #000; }
