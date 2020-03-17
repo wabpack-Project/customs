@@ -21,9 +21,15 @@ const config = {
 	},
 	// 未支付详情
 	projectD:{
-		localPath:'./src/projects/projectC/',
+		localPath:'./src/projects/projectD/',
 		uploadPath:'/h5/test/tf/',
 		commonPath: '../common/orderDetails.js',
+	},
+	// 服务详情
+	projectE:{
+		localPath:'./src/projects/projectE/',
+		uploadPath:'/h5/test/tf/',
+		commonPath: '../common/serviceCom.js',
 	}
 };
 
