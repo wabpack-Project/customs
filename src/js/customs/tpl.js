@@ -247,7 +247,7 @@
 			'  <!--</div>-->\n' +
 			'  </div>\n' +
 			'</div>',
-		// 预约主页模板
+		// 中英文陪诊模板
 		visitsList: '<div class="drawer" style="display: block;" data-v="<%=data.hash%>" id="draw_<%=data.hash%>" >\n' +
 			'  <div class="drawer_mask"></div>\n' +
 			'  <div class="drawer_out">\n' +
@@ -263,6 +263,8 @@
 			'    </div>\n' +
 			'    <div class="dw_body dw_m92">\n' +
 			'      <div class="select_visits" >\n' +
+			'        <!-- 合计 -->\n' +
+			'        <div class="visit_price"></div>\n' +
 			'        <!-- 中英文选择 -->\n' +
 			'        <ul class="clearfix">\n' +
 			'          <%\n' +

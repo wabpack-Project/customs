@@ -299,6 +299,7 @@
 			'    </div>\n' +
 			'    <div class="dw_body dw_m92">\n' +
 			'      <div class="select_visits" >\n' +
+			'        \n' +
 			'        <!-- 中英文选择 -->\n' +
 			'        <ul class="clearfix">\n' +
 			'          <%\n' +
@@ -332,8 +333,10 @@
 			'            </div>\n' +
 			'            <div class="opt_count fl add"><span class="iconfont iconjia"></span></div>\n' +
 			'          </div>\n' +
+			'          <!-- 合计 -->\n' +
+			'          <div class="visit_price"></div>\n' +
+			'          <!-- 描述 -->\n' +
 			'          <div class="visit_des"><%=data.data.accompany_duration_minandmax.discription%></div>\n' +
-			'          \n' +
 			'        </div>\n' +
 			'        <!-- end -->\n' +
 			'      </div>\n' +
@@ -516,6 +519,73 @@
 			'      </div>\n' +
 			'    </div>\n' +
 			'    <!--</div>-->\n' +
+			'  </div>\n' +
+			'</div>',
+		// 去往国家列表
+		countryList: '<div class="drawer" style="display: block"  data-v="<%=data.hash%>" id="draw_<%=data.hash%>" >\n' +
+			'  <div class="drawer_mask  <%=data.maskClass+\'-\'+data.hash%>"></div>\n' +
+			'  <div class="drawer_out">\n' +
+			'    <!--<div class="drawer_cont">-->\n' +
+			'    <div class="dw_head dw_m92">\n' +
+			'      <div class="fl" >\n' +
+			'        <a href="javascript:;" class="cancel <%=data.cancelBtn+\'-\'+data.hash%>">返回</a>\n' +
+			'      </div>\n' +
+			'      <div class="fr" style="display: none">\n' +
+			'        <a href="javascript:;" class="confirm <%=data.sureBtn+\'-\'+data.hash%>">确认</a>\n' +
+			'      </div>\n' +
+			'      <div class="dw_h_name">选择去往国家</div>\n' +
+			'    </div>\n' +
+			'    <div class="dw_search dw_m92">\n' +
+			'      <!-- 搜索 -->\n' +
+			'      <div class="select_list_search">\n' +
+			'        <div class="s_l_search" >\n' +
+			'          <input class="search_val" type="search" autocomplete="off" placeholder="请输入国家名称或简码" value=""  />\n' +
+			'        </div>\n' +
+			'      </div>\n' +
+			'    </div>\n' +
+			'    <div class="dw_body dw_m92">\n' +
+			'      <!-- 显示数据列表 -->\n' +
+			'      <ul class="select_list list_bt search_on">\n' +
+			'      \n' +
+			'      </ul>\n' +
+			'      <!-- 全数据列表 -->\n' +
+			'      <ul class="select_list list_bt search_off" style="display: none">\n' +
+			'        <%\n' +
+			'        var i = 0, countryData = data.data.country, len = countryData.length, curCountry = data.data.curCountry, countryName = "iconxuanzhong";\n' +
+			'        for(; i<len; i++){\n' +
+			'        var countryInfo = countryData[i];\n' +
+			'        countryName = "iconxuanzhong"\n' +
+			'        if(curCountry.name == countryInfo.CHINESE) {\n' +
+			'          countryName = "iconiconfontxuanzhong4";\n' +
+			'        }\n' +
+			'        %>\n' +
+			'        <li class="on" attr_id="<%=countryInfo.id%>" attr_CHINESE="<%=countryInfo.CHINESE%>" attr_Numeric="<%=countryInfo.Numeric%>" attr_Alpha3code="<%=countryInfo.Alpha3code%>" >\n' +
+			'          \n' +
+			'          <div class="fl ">\n' +
+			'            <span class="iconfont <%=countryName%> s_select"></span>\n' +
+			'          </div>\n' +
+			'          \n' +
+			'          <div class="s_list_tit">\n' +
+			'            <div>\n' +
+			'              <%=countryInfo.CHINESE%>\n' +
+			'            </div>\n' +
+			'            <div style="display: none">\n' +
+			'              <%=countryInfo.Alpha3code%>\n' +
+			'            </div>\n' +
+			'            <div style="display: none">\n' +
+			'              <%=countryInfo.Alpha3code.toLowerCase()%>\n' +
+			'            </div>\n' +
+			'            <div style="display: none">\n' +
+			'              <%=countryInfo.Numeric%>\n' +
+			'            </div>\n' +
+			'          </div>\n' +
+			'        </li>\n' +
+			'        <%\n' +
+			'        }\n' +
+			'        %>\n' +
+			'      </ul>\n' +
+			'    </div>\n' +
+			'  <!--</div>-->\n' +
 			'  </div>\n' +
 			'</div>',
 	};

@@ -261,9 +261,10 @@ console.log(svgSrc);
 		// 更改文字
 		$("#appointment").val("立即购买");
 		// 增加服务图片
-		var serviceImg = '<img src="' + serviceInfo.img + '" >';
-		$(".service_img").append(serviceImg);
-
+		if (!!serviceInfo.img) {
+			var serviceImg = '<img src="' + serviceInfo.img + '" >';
+			$(".service_img").append(serviceImg);
+		}
 		// var svgHtml = '<img src="' + svgSrc + '" >';
 		// $(".foot_opt").append(svgHtml);
 		// var svgHtml = '<img src="../../images/customs/jiazai.svg" >';
@@ -1085,7 +1086,7 @@ console.log(svgSrc);
 
 	// 请选择陪诊时间
 	var visitsHand = function (el) {
-		// console.log("请选择陪诊时间");
+		console.log("请选择陪诊时间");
 		// 获取数据编号
 		var n = $(el).attr("attr_num");
 		// 获取id
@@ -1111,6 +1112,8 @@ console.log(svgSrc);
 		loadDraw(tpl.visitsList, visitsData, function (el) {
 			// 绑定事件
 			bindVisitsEvent(el, visitsData);
+			// 统计陪诊总价
+			totalVisitsPrice(el, visitsData);
 			// 绑定类别匹配事件
 			// $(".select_list_category dt").click(sortOpt);
 		}, n, _id, sureVisitsHand, cancelVisitsHand);
@@ -1124,7 +1127,8 @@ console.log(svgSrc);
 		var def_id = $p_select.eq(0).attr("data-id");
 		// 获取时间范围
 		var visitsTime = d.accompany_duration_minandmax;
-
+		// 弹出别名
+		var _el = el;
 		// 绑定点击多选选中事件
 		$p_select.click(function () {
 			// 当前状态设为选中
@@ -1145,12 +1149,45 @@ console.log(svgSrc);
 			addHandle: function (el, v) {
 				el.value = v + "小时";
 				global.data.visitsInfo.time = v;
+				// 统计陪诊总价
+				totalVisitsPrice(_el, d);
 			},
 			cutHandle: function (el, v) {
 				el.value = v + "小时";
 				global.data.visitsInfo.time = v;
+				// 统计陪诊总价
+				totalVisitsPrice(_el, d);
 			},
 		});
+
+	};
+	// 计算陪诊价格
+	var totalVisitsPrice = function (el, d) {
+		// 获取元素
+		var $p_select = el.find("li");
+		// 获取默认值id
+		var def_id = $p_select.eq(0).attr("data-id");
+		// 判断陪诊信息是否存在
+		if (!global.data.visitsInfo.cont){
+			// 获取默认陪诊信息
+			global.data.visitsInfo.cont = d.children[def_id];
+		}
+		if (!global.data.visitsInfo.time){
+			// 获取默认陪诊时间
+			global.data.visitsInfo.time = d.accompany_duration_minandmax.min;
+		}
+		// console.log(global.data.visitsInfo);
+		// 获取价格和时间
+		var visitsPrice, _t = global.data.visitsInfo.time,
+			_price = global.data.visitsInfo.cont.price;
+		// console.log(_t, _price);
+		// 计算价格
+		visitsPrice = _t*_price;
+		// 储存陪诊价格
+		global.visitsPrice = visitsPrice;
+		// 设置页面陪诊价格
+		var visitsHtml = '金额：<em>￥</em>' + visitsPrice.toFixed(2);
+		$(".visit_price").html(visitsHtml);
 
 	};
 	// 陪诊时间确认事件
@@ -1351,6 +1388,16 @@ console.log(svgSrc);
 		});
 
 		return;
+		// 添加浮动div
+		var newHtml = '<div class="flex_box" style="position: absolute; top: 0; left: 5.5rem; width: 100%; background: #fff; border-bottom: 1px #ddd solid;"></div>';
+		$(".d_list").prepend(newHtml);		// 在父级最前面增加子元素
+
+		// 滚动药品操作
+		$(".d_list").scroll(function () {
+			scrollHand(this, $cat)
+		});
+
+		return;
 		// 药品点击事件
 		$drug_list.click(function () {
 			// 获取药品id和类别
@@ -1366,6 +1413,42 @@ console.log(svgSrc);
 			setShopCartHtml(data.drugArr);
 		});
 
+	};
+	// 滚动事件
+	var scrollHand = function (el, elArr) {
+		// console.log(el, elArr);
+
+
+		// 获取滚动条隐藏区域距离
+		var s_top = $(el).scrollTop();
+		var el_h = $(".v_0").offset().top;
+		// console.log(3, document.getElementsByClassName("v_0")[1].clientHeight + document.getElementsByClassName("v_0")[0].clientHeight);
+		// 遍历类别
+		var i = 0, len = elArr.length;
+		for (; i < len; i++) {
+			var _el = elArr[i];
+			// 获取分类id
+			var _id = $(_el).attr("data-v");
+			// console.log(_id);
+			var _className = ".v_" + _id;
+			// console.log($(className).offset().top);
+			// 判断类别距离顶部大于0的分类，当前停留的分类就是他上一个
+			if ($("ul"+_className).offset().top > 0) {
+				var curId = $(elArr[i-1]).attr("data-v");
+				var curClassName = ".v_" + curId;
+				console.log(curId);
+				console.log(curClassName);
+				// 给当前类别添加选中其他移除选中
+				$(".k_"+curId).addClass("cur").siblings().removeClass("cur");
+				//
+				$(".flex_box").empty().append($("div"+curClassName).clone());
+				// console.log($(_className));
+				break;
+			}
+		}
+		// $(".d_list").scrollTop()
+		// $(".v_16186").offset().top
+		// $(".v_0").height()
 	};
 	// 更新药品列表数量（多个同时更新）
 	var setDrugListNum = function (d) {
@@ -1826,7 +1909,7 @@ console.log(svgSrc);
 			console.log(res);
 			if (res.ResultCode == 1) {
 				console.log(res.ResultDescription);
-				alert(res.ResultDescription);
+				// alert(res.ResultDescription);
 				location.href = res.Result.pay_url;
 			} else {
 				console.log(res.ResultDescription);

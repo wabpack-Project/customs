@@ -9,7 +9,7 @@
 .dw_head .confirm { color: #00a7ff; font-size: .75rem; }
 .dw_h_name { color: #111; font-size: .85rem; padding: 0 1.8rem; text-align: center; }
 .dw_body { overflow-y: scroll; background: #fff; max-height:22rem; }
-
+.dw_search { background: #fff; }
 
 
 

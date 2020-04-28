@@ -71,8 +71,8 @@ var noticeSrc = require('../../images/customs/notice.png');
 			'<div class="notice">\n' +
 			'  <div class="nt_head">\n' +
 			'    <img class="fl mid" src="../images/customs/notice.png" >\n' +
-			'    <a class="fr" href="<%=navData.qa.url%>" ><em class="iconfont iconyoujiantou fr"></em>更多</a>\n' +
-			'    <span>FAQ</span>\n' +
+			'    <a class="fr" href="<%=data.more.url%>" ><em class="iconfont iconyoujiantou fr"></em><%=data.more.button_name%></a>\n' +
+			'    <span><%=data.more.title_name%></span>\n' +
 			'  </div>\n' +
 			'  <ul class="faq_list">\n' +
 			'    <%\n' +
@@ -128,6 +128,10 @@ var noticeSrc = require('../../images/customs/notice.png');
 				$(".nav_list li").each(function (n) {
 					$(this).find("img").attr("src", imgArr[n]);
 				});
+			}
+			// 判断是否显示更多
+			if (!data.cacheCustoms.more.boolean_more){
+				$(".nt_head").find("a").hide();
 			}
 			// 绑定事件
 			// bindEvent(id);

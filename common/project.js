@@ -1,1 +1,1 @@
-exports.name = 'projectB'
+exports.name = 'projectE'

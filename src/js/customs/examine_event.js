@@ -157,6 +157,8 @@ console.log(svgSrc);
 		});
 	};
 
+
+
 	// 验证只能输入正整数
 	var checkInteger = function (el) {
 		// 只能输入数字正则
@@ -213,6 +215,12 @@ console.log(svgSrc);
 		timeSlotList: {
 			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:time_period_limited_by_date",
 			reqDevUrl	: "2/lancare_customhouse_interface_Tianjin/api:time_period_limited_by_date",
+			reqJson : "../../service/examine/timeSlot.json",
+			flag		: false
+		},
+		countryList: {
+			reqUrl	: "2/lancare_customhouse_interface_Tianjin/api:nationality_list",
+			reqDevUrl	: "2/lancare_customhouse_interface_Tianjin/api:nationality_list",
 			reqJson : "../../service/examine/timeSlot.json",
 			flag		: false
 		},
@@ -685,6 +693,8 @@ console.log(svgSrc);
 			$duration = $("#duration"),										// 停留时间
 			$EntryorExit_id = $("#EntryorExit_id"),				// 出入境id
 			$confirm = el.find(".confirm");						// 页面文字信息展示
+		// 禁用输入框输入
+		$destination.attr("readonly", "readonly");
 		// 绑定确认修改事件
 		$confirm.click(function () {
 			if (global.isflag) return;
@@ -692,20 +702,173 @@ console.log(svgSrc);
 		});
 
 		// 绑定目的地输入事件
-		checkCNbind($destination);
+		// checkCNbind($destination);
 
-		// 绑定目的地输入事件
-		// $destination.bind('input propertychange', function () {
-		// 	// 验证非法输入
-		// 	checkIllegalInput(this);
-		//
-		// });
+		// 绑定目的地点击事件
+		$destination.bind('click', function () {
+			// 验证非法输入
+			// checkIllegalInput(this);
+			console.log(this.value);
+			// 请求去往国家数据
+			reqCountryApi(this);
+		});
 		// 绑定停留时间输入事件
 		$duration.bind('input propertychange', function () {
 			// 验证只能输入数字
 			checkInteger(this);
 		});
 	};
+	// 载入国家筛选列表
+	var loadCountry = function (d, inputEl) {
+		// 更新data数据
+		var newD = {
+			country: d,
+			curCountry: {
+				name: $(inputEl).val(),
+			}
+		};
+		// 载入预约时间
+		loadDraw(tpl.countryList, newD, function (el) {
+			// 默认拷贝所有国家
+			$(".search_on").append($(".search_off").find("li").clone());
+			// 设置最大高度
+			$(el).find(".dw_body").css("height", "12.2rem");
+			var scale = window.screen.availHeight/window.screen.availWidth;
+			if(scale < 1.8) {
+				$(el).find(".dw_body").css("height", "7.6rem");
+			}
+
+			// 禁用输入框输入
+			// $(inputEl).attr("readonly", "readonly");
+			// 绑定事件
+			bindCountryHand(el, d, inputEl);
+		}, null, null, null, cancelTimeHand, inputEl);
+	};
+	// 绑定国家点击事件
+	var bindCountryHand = function (el, d, inputEl) {
+		// 获取登记列表
+		var $s_sign = el.find(".search_on").find("li"),				// 登记列表
+			$search = el.find(".search_val"),				// 搜索输入框
+			$dw_mask = el.find(".drawer_mask");		// 页面文字信息展示
+		// 绑定背景点击事件
+		$dw_mask.click(function () {
+			// 移除国家
+			el.remove();
+		});
+		// 绑定点击国家事件
+		el.find(".search_on").on("click", "li", function () {
+			// 获取国家相关信息
+			var countryInfo = {
+				id: this.getAttribute("attr_id"),
+				_chinese: this.getAttribute("attr_chinese"),
+				_numeric: this.getAttribute("attr_numeric"),
+				alpha3code: this.getAttribute("attr_alpha3code"),
+			};
+      console.log(countryInfo);
+			// 给去往国家赋值
+			$(inputEl).val(countryInfo._chinese);
+			// 关闭弹出层
+			el.remove();
+		});
+		// 绑定输入联想查询国家
+		bindZHInput($search, el, d, inputEl, inputCountryCallback);
+	};
+	// 国家输入回调方法
+	var inputCountryCallback = function (searchEl, el, d, inputEl) {
+		// 获取输入框值
+		var v = $(searchEl).val(), t;
+		console.log(v);
+		// var newList1 = testFindText(v);
+		// console.log(0, newList1);
+
+		t && clearTimeout(t);
+		t = setTimeout(function(){
+
+			// 筛选新列表
+			var newList = $(".search_off").find("li:contains('"+ v +"')").clone();
+			console.log(1, newList);
+			// 拷贝匹配国家
+			$(".search_on").empty().append(newList);
+
+		}, 300);
+
+
+		// 绑定点击事件
+		// $(".search_on").on("click", "li", function () {
+		// 	console.log(this);
+		// });
+		// 绑定事件
+		// bindCountryHand(el, d, inputEl);
+		// // 绑定点击国家事件
+		// $s_sign.click(function () {
+		// 	// 获取国家相关信息
+		// 	var countryInfo = {
+		// 		id: this.getAttribute("attr_id"),
+		// 		_chinese: this.getAttribute("attr_chinese"),
+		// 		_numeric: this.getAttribute("attr_numeric"),
+		// 		alpha3code: this.getAttribute("attr_alpha3code"),
+		// 	};
+		// 	console.log(countryInfo);
+		// 	// 给去往国家赋值
+		// 	$(inputEl).val(countryInfo._chinese);
+		// 	// 关闭弹出层
+		// 	el.remove();
+		// });
+		// 筛选列表
+		// debugger
+	};
+
+	// 测试js查找文本内容
+	var testFindText = function (v) {
+		var arrLi = document.getElementsByClassName("search_off")[0].getElementsByTagName("li"), newArrLi = [];
+		// console.log(arrLi);
+		for (var i = 0; i<arrLi.length; i++){
+			var con = arrLi[i].textContent;
+			if (con.indexOf(v) > -1){
+				newArrLi.push(arrLi[i]);
+			}
+			// console.log(con);
+		}
+		return newArrLi;
+
+	};
+
+	// 绑定包含中文输入验证
+	var bindZHInput = function (searchEl, el, d, inputEl, callback) {
+		/**
+		 * @param flag: 用于标记是否是非直接的文字输入
+		 */
+		var flag = false, isFlag = false;
+		searchEl.on({
+			// 'keyup' : function(e){
+			// 	flag = false;
+			// 	console.log("抬起！");
+			// 	callback && callback(this, el, d, inputEl);
+			// },
+			// 'keydown' : function(e){
+			// 	// console.log("按下！");
+			// 	flag = true;
+			// },
+			'input propertychange': function(e) {
+				if(!flag) {
+					console.log("输入！");
+					// 验证非法输入
+					callback && callback(this, el, d, inputEl);
+				}
+			},
+			'compositionstart': function(e) {
+				flag = true;
+			},
+			'compositionend': function(e) {
+				flag = false;
+				if(!flag) {
+					// 验证非法输入
+					callback && callback(this, el, d, inputEl);
+				}
+			}
+		});
+	};
+
 	// 修改登记出入境验证
 	var checkSignUpdate = function () {
 		// 获取页面输入值
@@ -1337,6 +1500,11 @@ console.log(svgSrc);
 			// console.log(data.drugArr);
 			drugCartHand(global.data.drugInfo, d.children.shop_cart);
 		});
+		// 滚动药品操作
+		// $(".d_list").scrollTop()
+		// $(".v_16186").offset().top
+		// $(".v_0").height()
+		$(".d_list").scroll(scrollHand(a, b, c));
 
 		// 确认点击事件
 		$sure_drug.click(function () {
@@ -1373,6 +1541,10 @@ console.log(svgSrc);
 			setShopCartHtml(data.drugArr);
 		});
 
+	};
+	// 滚动事件
+	var scrollHand = function (a, b, c) {
+		console.log(a, b, c);
 	};
 	// 更新药品列表数量（多个同时更新）
 	var setDrugListNum = function (d) {
@@ -1776,6 +1948,39 @@ console.log(svgSrc);
 				// var timeData = data.cacheCustoms.register_list.date;
 				// 载入预约
 				loadTimeSlot(res.Result, id, appEl);
+				// alert(res.msg);
+			} else {
+				console.log(res.ResultDescription);
+				// alert(res.msg);
+			}
+		});
+	};
+
+	// 请求国家列表接口
+	var reqCountryApi = function (el) {
+		// 判断是请求本地json数据，请求方式设置为GET
+		if (data.countryList.flag && ajax.isLocal()){
+			// 请求方式
+			ajax.config.type = "get";
+		}
+		// 请求URL
+		ajax.config.url = ajax.reqUrl(data.countryList, siteUrl);
+		// 请求参数
+		// ajax.config.data = {
+		// 	unix_time: d.unix_time,
+		// 	// data: JSON.stringify(d),
+		// };
+		console.log(ajax.config.data);
+		// 请求数据
+		ajax.reqDataApi(ajax.config, function (res) {
+			console.log(res);
+			if (res.ResultCode == 1) {
+				// console.log(res.ResultDescription);
+				// 缓存数据
+				// data.cacheCustoms = res.Result;
+				// var timeData = data.cacheCustoms.register_list.date;
+				// 载入预约
+				loadCountry(res.Result, el);
 				// alert(res.msg);
 			} else {
 				console.log(res.ResultDescription);
